@@ -1,0 +1,103 @@
+generated: '2026-08-04'
+method: searched
+source: openapi/livekindly-content-openapi.yml
+also_source: https://thelivekindlyco.com/.well-known/oauth-authorization-server
+docs: null
+docs_note: >-
+  LIVEKINDLY publishes no developer or authentication documentation. The baseline below was
+  derived mechanically from the OpenAPI in this repo (itself derived from the live
+  https://thelivekindlyco.com/wp-json/ route index) and then upgraded with the OAuth 2.0
+  authorization-server metadata LIVEKINDLY actually serves at /.well-known/, which the spec
+  derivation cannot see.
+note: >-
+  Two independent authentication models coexist on thelivekindlyco.com. (1) The wp/v2 content API
+  is ANONYMOUS for reads — every collection in openapi/ returned 200 with no credential — and
+  falls back to WordPress Application Passwords over HTTP Basic (or logged-in cookie +
+  X-WP-Nonce in a browser) for writes. (2) The MCP endpoints are protected by a real OAuth 2.0
+  authorization server with PKCE and a single "mcp" scope. Neither model is documented by
+  LIVEKINDLY anywhere a developer would find it.
+summary:
+  types:
+  - apiKey
+  - http
+  - oauth2
+  api_key_in:
+  - header
+  oauth2_flows:
+  - authorizationCode
+  anonymous_read: true
+schemes:
+- name: applicationPassword
+  type: http
+  scheme: basic
+  description: >-
+    WordPress Application Passwords over HTTP Basic. Issued per-user from
+    https://thelivekindlyco.com/wp-admin/authorize-application.php. Required for every write
+    operation on wp/v2 and for the routes that return author or settings data.
+  applies_to: livekindly:content
+  sources:
+  - openapi/livekindly-content-openapi.yml
+- name: cookieNonce
+  type: apiKey
+  in: header
+  parameter: X-WP-Nonce
+  description: >-
+    Logged-in cookie authentication paired with an X-WP-Nonce header. Browser/admin context only;
+    not usable by a server-side or agent client.
+  applies_to: livekindly:content
+  sources:
+  - openapi/livekindly-content-openapi.yml
+- name: mcp-oauth
+  type: oauth2
+  description: >-
+    OAuth 2.0 authorization code + PKCE (S256 required) protecting the WordPress MCP Adapter
+    endpoints. Public clients only — token_endpoint_auth_methods is [none] — and client identity
+    is expressed with a client-ID metadata document rather than dynamic client registration.
+  applies_to: livekindly:mcp
+  issuer: https://thelivekindlyco.com
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://thelivekindlyco.com/oauth/authorize
+    tokenUrl: https://thelivekindlyco.com/oauth/token
+    refreshUrl: https://thelivekindlyco.com/oauth/token
+    scopes:
+      mcp: The single scope the authorization server advertises.
+  revocation_endpoint: https://thelivekindlyco.com/oauth/revoke
+  scope_count: 1
+  artifact: scopes/livekindly-scopes.yml
+  sources:
+  - https://thelivekindlyco.com/.well-known/oauth-authorization-server
+  - https://thelivekindlyco.com/.well-known/oauth-protected-resource
+anonymous_access:
+  content_api:
+    readable: true
+    observed:
+    - {operation: getPosts, url: 'https://thelivekindlyco.com/wp-json/wp/v2/posts?per_page=1', status: 200, x_wp_total: 39}
+    - {operation: getPages, status: 200, x_wp_total: 19}
+    - {operation: getBrand, status: 200, x_wp_total: 4}
+    - {operation: getPartner, status: 200, x_wp_total: 4}
+    - {operation: getJob, status: 200, x_wp_total: 6}
+    - {operation: getMedia, status: 200, x_wp_total: 1145}
+    - {operation: getCategories, status: 200, x_wp_total: 3}
+    denied:
+    - {operation: getUsers, status: 403, note: 'blocked at the edge by the Sucuri WAF (Block ID UAT007), which returns an HTML interstitial rather than the WordPress JSON error envelope — not an application permission check'}
+  mcp:
+    readable: false
+    challenge: 'WWW-Authenticate: Bearer realm="https://thelivekindlyco.com", resource_metadata="https://thelivekindlyco.com/.well-known/oauth-protected-resource"'
+    challenge_note: >-
+      The 401 carries a correct RFC 9728 bearer challenge pointing at the protected-resource
+      metadata, so an MCP client can discover the authorization server from the failure alone
+      without any documentation. This is the strongest single piece of auth ergonomics on the
+      whole LIVEKINDLY surface.
+    observed:
+    - {endpoint: /wp-json/mcp/mcp-oauth-server, method: tools/list, status: 401, code: mcp_unauthorized}
+    - {endpoint: /wp-json/mcp/mcp-adapter-default-server, method: tools/list, status: 401, code: rest_forbidden}
+    - {endpoint: /wp-json/wp-abilities/v1/abilities, status: 401, code: rest_forbidden}
+transport_security:
+  https_only: true
+  tls_version: TLSv1.3
+  hsts: false
+  note: >-
+    No Strict-Transport-Security header is set on thelivekindlyco.com, so a first plaintext
+    request is not protected by HSTS. A Content-Security-Policy of upgrade-insecure-requests is
+    present instead. See security/livekindly-domain-security.yml.

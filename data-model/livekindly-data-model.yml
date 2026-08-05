@@ -1,0 +1,159 @@
+generated: '2026-08-04'
+method: derived
+source: >-
+  openapi/livekindly-content-openapi.yml plus live anonymous GETs of one item from each collection
+  on https://thelivekindlyco.com/wp-json/wp/v2/, 2026-08-04
+note: >-
+  The entity graph below is the WordPress content model as thelivekindlyco.com actually
+  configures it. Field lists are taken from real payloads, not from the WordPress schema in the
+  abstract — which matters here, because LIVEKINDLY's three custom post types are registered with
+  a deliberately thin field set (see the `brand` / `partner` / `job` entries: no content, no
+  excerpt, no featured_media, no taxonomy). Relationships are recorded only where a real id
+  reference or a real _links relation was observed.
+identifiers:
+  scheme: integer
+  note: >-
+    All entities use plain incrementing WordPress integer ids with no type prefix, so an id alone
+    is ambiguous across entity types — a consumer must carry the collection name alongside it.
+  slug: >-
+    Every entity also carries a URL-safe `slug` and an absolute `link`. The slug is the stable
+    human-facing key and is the better join key for an agent.
+entities:
+- name: post
+  collection: /wp/v2/posts
+  operations: [getPosts, getPostsById]
+  count: 39
+  description: >-
+    Newsroom releases and LiveKindly Blog articles. The richest entity on the site — the only one
+    exposing full rendered content.
+  fields: [id, date, date_gmt, guid, modified, modified_gmt, slug, status, type, link, title,
+    content, excerpt, author, featured_media, comment_status, ping_status, sticky, template,
+    format, meta, categories, tags, class_list, acf, yoast_head, yoast_head_json, _links]
+  relationships:
+  - {type: belongs_to, target: user, via: author, note: author id; the users collection is edge-blocked}
+  - {type: has_one, target: media, via: featured_media}
+  - {type: has_many, target: category, via: categories}
+  - {type: has_many, target: tag, via: tags, note: 0 tags exist on this site}
+  - {type: has_many, target: revision, via: '_links.version-history'}
+  - {type: has_many, target: comment, via: '_links.replies', note: comments are closed site-wide}
+- name: page
+  collection: /wp/v2/pages
+  operations: [getPages, getPagesById]
+  count: 19
+  description: >-
+    Corporate pages — The Collective, B2B Solutions, Impact, Careers, Team, Directors, Veganuary,
+    Kind Heroes, and the legal set (Terms of Use, Privacy Policy, German Privacy Policy, Purchase
+    Terms, Goods for Resale Terms).
+  fields: [id, date, guid, modified, slug, status, type, link, title, content, excerpt, author,
+    featured_media, parent, menu_order, comment_status, ping_status, template, meta, class_list,
+    acf, yoast_head, yoast_head_json, _links]
+  relationships:
+  - {type: belongs_to, target: page, via: parent, note: self-referential hierarchy}
+  - {type: belongs_to, target: user, via: author}
+  - {type: has_one, target: media, via: featured_media}
+  - {type: has_many, target: revision, via: '_links.version-history'}
+- name: brand
+  collection: /wp/v2/brand
+  operations: [getBrand, getBrandById]
+  count: 4
+  description: >-
+    The Collective's operating brands. Instances observed: Fry's Family Food Co.
+    (frys-family-food-co), Like Meat (like-meat), Oumph! (oumph), The No Meat Company
+    (the-no-meat-company).
+  fields: [id, date, guid, modified, slug, status, type, link, title, template, class_list, acf,
+    yoast_head, yoast_head_json, _links]
+  relationships:
+  - {type: has_many, target: media, via: '_links.wp:attachment'}
+  gap: >-
+    Registered without content, excerpt, featured_media or any taxonomy. The API returns a brand's
+    name, slug and permalink and nothing else — an agent asking "what does Oumph! make?" gets no
+    answer from the JSON and must scrape the HTML page at `link`. The `acf` field is present but
+    returns an empty array, so whatever brand attributes the site renders are not exposed through
+    REST.
+- name: partner
+  collection: /wp/v2/partner
+  operations: [getPartner, getPartnerById]
+  count: 4
+  description: >-
+    Manufacturing and distribution partners. Instances observed: PHW Group (phw-group), RCL Foods
+    (rcl-foods), Ospelt (ospelt), Coest (coest).
+  fields: [id, date, guid, modified, slug, status, type, link, title, template, class_list, acf,
+    yoast_head, yoast_head_json, _links]
+  relationships:
+  - {type: has_many, target: media, via: '_links.wp:attachment'}
+  gap: Same thin registration as `brand` — title, slug and link only.
+- name: job
+  collection: /wp/v2/job
+  operations: [getJob, getJobById]
+  count: 6
+  description: >-
+    Open roles. Instances observed include Business Process Lead (Record to Report / Source to Pay
+    / Order to Cash), Accounting Intern, Sr. Food Scientist, Engineering Manager.
+  fields: [id, date, guid, modified, slug, status, type, link, title, template, class_list, acf,
+    yoast_head, yoast_head_json, _links]
+  relationships:
+  - {type: has_many, target: media, via: '_links.wp:attachment'}
+  gap: >-
+    No description, location, department, employment type or posting date beyond the WordPress
+    `date`. A job board or agent cannot consume these listings meaningfully without fetching the
+    HTML page.
+- name: media
+  collection: /wp/v2/media
+  operations: [getMedia, getMediaById]
+  count: 1145
+  description: The media library — product photography, brand assets, newsroom imagery.
+  fields: [id, date, guid, modified, slug, status, type, link, title, author, featured_media,
+    comment_status, ping_status, template, meta, class_list, acf, description, caption, alt_text,
+    media_type, mime_type, media_details, post, source_url, filename, filesize, _links]
+  relationships:
+  - {type: belongs_to, target: post, via: post, note: the attachment parent}
+  - {type: belongs_to, target: user, via: author}
+  note: >-
+    By far the largest collection, and the only one with real depth — media_details carries the
+    full generated size set, and alt_text/caption are populated. It is the most useful thing an
+    agent can actually get from this API.
+- name: category
+  collection: /wp/v2/categories
+  operations: [getCategories, getCategoriesById]
+  count: 3
+  description: 'Post taxonomy. Terms observed: LiveKindly Blog (22), Stories (9), Uncategorized (14).'
+  relationships:
+  - {type: has_many, target: post, via: categories}
+  - {type: belongs_to, target: category, via: parent, note: hierarchical}
+- name: tag
+  collection: /wp/v2/tags
+  operations: [getTags, getTagsById]
+  count: 0
+  description: Registered but unused — zero terms exist.
+- name: feed_category
+  collection: /wp/v2/feed_category
+  operations: [getFeedCategory, getFeedCategoryById]
+  count: 1
+  description: >-
+    A custom taxonomy with a single term. Not attached to any field returned by the post payloads
+    observed, so its role could not be determined from the public surface.
+- name: comment
+  collection: /wp/v2/comments
+  operations: [getComments, getCommentsById]
+  count: 0
+  description: Comments are closed site-wide; the collection is empty.
+- name: user
+  collection: /wp/v2/users
+  operations: [getUsers, getUsersById, getUsersMe]
+  count: null
+  description: >-
+    Authors. Not enumerable — the Sucuri WAF blocks the collection at the edge with a 403 HTML
+    interstitial, so the count and the author names behind `post.author` are not public.
+graph_summary:
+  entities: 11
+  populated_entities: 8
+  relationship_edges: 14
+  root_entities: [post, page, brand, partner, job, media]
+  note: >-
+    The model is a star, not a graph: everything hangs off posts and media, and the three
+    business-meaningful custom types (brand, partner, job) are isolated leaves with no taxonomy
+    or cross-references. There is no relationship between a `brand` and the `post` announcing it,
+    or between a `partner` and the `brand` it manufactures for, even though the site's own
+    narrative connects them.
+render: null
+render_note: No subway/ visual exists for this repo.

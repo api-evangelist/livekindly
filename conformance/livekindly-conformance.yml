@@ -1,0 +1,130 @@
+generated: '2026-08-04'
+method: derived
+source: >-
+  openapi/livekindly-content-openapi.yml, well-known/livekindly-well-known.yml and the live
+  discovery documents at https://thelivekindlyco.com/.well-known/
+note: >-
+  LIVEKINDLY makes no compliance or standards claim anywhere on its site — there is no trust
+  center, no certifications page and no developer documentation. Everything below is derived from
+  what was actually observed on the wire. The company's one published third-party attestation is
+  a B Corp certification announced in its own newsroom (June 2026); that is a social/environmental
+  certification, not a security or data-protection one, so no `Compliance` pointer is wired.
+standards:
+- id: oauth2
+  name: OAuth 2.0 (RFC 6749)
+  conforms: true
+  evidence: >-
+    Authorization-code grant with refresh_token advertised at
+    https://thelivekindlyco.com/.well-known/oauth-authorization-server, protecting the MCP
+    endpoint.
+- id: rfc8414-oauth-authorization-server-metadata
+  name: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+  conforms: true
+  evidence: '/.well-known/oauth-authorization-server returns 200 application/json with issuer, authorization_endpoint, token_endpoint, revocation_endpoint, response_types_supported, grant_types_supported, scopes_supported.'
+- id: rfc9728-oauth-protected-resource-metadata
+  name: OAuth 2.0 Protected Resource Metadata (RFC 9728)
+  conforms: true
+  evidence: >-
+    /.well-known/oauth-protected-resource returns 200 naming the MCP resource, its authorization
+    server, bearer_methods_supported [header] and scopes_supported [mcp]. The 401 from the MCP
+    endpoint also returns the matching challenge — 'WWW-Authenticate: Bearer
+    realm="https://thelivekindlyco.com",
+    resource_metadata="https://thelivekindlyco.com/.well-known/oauth-protected-resource"' — which
+    is the client-discovery half of RFC 9728 that most implementations omit.
+- id: rfc7636-pkce
+  name: Proof Key for Code Exchange (RFC 7636)
+  conforms: true
+  evidence: 'code_challenge_methods_supported: [S256]; token_endpoint_auth_methods_supported: [none] (public clients).'
+- id: rfc7591-dynamic-client-registration
+  name: OAuth 2.0 Dynamic Client Registration (RFC 7591)
+  conforms: false
+  evidence: >-
+    No registration_endpoint is advertised. The server instead sets
+    client_id_metadata_document_supported: true, the client-ID-as-URL pattern.
+- id: mcp
+  name: Model Context Protocol
+  conforms: partial
+  evidence: >-
+    A live MCP server (WordPress MCP Adapter) is registered at /wp-json/mcp with JSON-RPC
+    endpoints, and it implements the MCP OAuth authorization spec via RFC 8414 + RFC 9728
+    discovery. Marked partial because the protocol version, capabilities and tool set could not
+    be verified — initialize and tools/list are both 401 anonymously.
+- id: oidc
+  name: OpenID Connect Discovery 1.0
+  conforms: false
+  evidence: '/.well-known/openid-configuration -> 404. OAuth 2.0 only; no identity layer.'
+- id: rfc9457-problem-details
+  name: Problem Details for HTTP APIs (RFC 9457)
+  conforms: false
+  evidence: >-
+    Errors use the WordPress envelope {code, message, data.status} with content-type
+    application/json, not application/problem+json.
+- id: rfc8288-web-linking
+  name: Web Linking (RFC 8288)
+  conforms: true
+  evidence: 'Collection responses emit Link: <...page=2>; rel="next" and per-resource _links / HAL-ish relations.'
+- id: rfc9116-security-txt
+  name: security.txt (RFC 9116)
+  conforms: false
+  evidence: '/.well-known/security.txt -> 404 on every host probed.'
+- id: rfc9727-api-catalog
+  name: RFC 9727 api-catalog
+  conforms: false
+  evidence: '/.well-known/api-catalog -> 404.'
+- id: a2a
+  name: A2A Agent Card
+  conforms: false
+  evidence: '/.well-known/agent-card.json and /.well-known/agent.json both 404 on every host probed.'
+- id: openapi
+  name: OpenAPI
+  conforms: false
+  evidence: >-
+    LIVEKINDLY publishes no OpenAPI. The definition in openapi/ was derived by API Evangelist
+    from the live WordPress route-discovery document and is marked x-provider-published: false.
+- id: oembed
+  name: oEmbed 1.0
+  conforms: true
+  evidence: 'oembed/1.0 namespace registered with /embed and /proxy routes.'
+- id: sitemaps-xml
+  name: sitemaps.org XML Sitemap
+  conforms: true
+  evidence: 'https://thelivekindlyco.com/sitemap_index.xml (Yoast) — post, page, job, category sitemaps.'
+- id: schema-org
+  name: Schema.org structured data
+  conforms: true
+  evidence: >-
+    Yoast emits Schema.org JSON-LD on every page and mirrors it into the REST payloads as
+    yoast_head_json.
+- id: tls13
+  name: TLS 1.3
+  conforms: true
+  evidence: 'Negotiated TLSv1.3 on thelivekindlyco.com (see security/livekindly-domain-security.yml).'
+- id: hsts
+  name: HTTP Strict Transport Security (RFC 6797)
+  conforms: false
+  evidence: 'No Strict-Transport-Security header observed; only CSP upgrade-insecure-requests.'
+- id: dnssec
+  name: DNSSEC
+  conforms: false
+  evidence: 'No DNSSEC on thelivekindlyco.com.'
+- id: dmarc
+  name: DMARC
+  conforms: true
+  evidence: 'DMARC record present with policy p=reject; SPF present. No CAA record.'
+certifications_published:
+- name: B Corporation
+  status: certified
+  announced: '2026-06-09'
+  source: https://thelivekindlyco.com/livekindly-collective-is-b-corp-certified/
+  note: >-
+    Social and environmental performance certification. Not a security, privacy or data-handling
+    certification — recorded for completeness, and deliberately NOT wired as a `Compliance`
+    pointer, which reads as a published security/compliance program.
+security_compliance_program:
+  published: false
+  trust_center: null
+  soc2: null
+  iso27001: null
+  note: >-
+    No trust center, no certifications page, no security.txt, no vulnerability disclosure policy
+    found on any LIVEKINDLY host. See security/ — the probe recorded no hit.

@@ -1,0 +1,16 @@
+generated: '2026-08-04'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: thelivekindlyco.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep  5 22:48:50 2026 GMT
+  hsts: false
+domains:
+- domain: thelivekindlyco.com
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: reject

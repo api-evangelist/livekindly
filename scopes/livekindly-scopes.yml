@@ -1,0 +1,72 @@
+generated: '2026-08-04'
+method: probed
+source: https://thelivekindlyco.com/.well-known/oauth-authorization-server
+also_source: https://thelivekindlyco.com/.well-known/oauth-protected-resource
+docs: null
+docs_note: >-
+  LIVEKINDLY publishes no developer documentation of any kind, so there is no scopes or
+  permissions reference page to search. Everything below is taken verbatim from the two live
+  discovery documents saved in well-known/. Nothing is inferred.
+note: >-
+  This OAuth surface exists to authorize the site's WordPress MCP Adapter, not a product API. The
+  authorization server declares exactly ONE scope — "mcp" — which is the coarse all-or-nothing
+  grant the adapter uses; there is no per-resource or per-ability scope decomposition, so an
+  agent that obtains this scope obtains whatever the granting WordPress user can do through the
+  registered abilities. The wp/v2 content API in openapi/ does NOT use OAuth at all: it is
+  anonymous for reads and WordPress Application Passwords (HTTP Basic) for writes.
+schemes:
+- name: mcp-oauth
+  type: oauth2
+  source: https://thelivekindlyco.com/.well-known/oauth-authorization-server
+  issuer: https://thelivekindlyco.com
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://thelivekindlyco.com/oauth/authorize
+    tokenUrl: https://thelivekindlyco.com/oauth/token
+    refreshUrl: https://thelivekindlyco.com/oauth/token
+    pkce:
+      required: true
+      code_challenge_methods_supported: [S256]
+  revocation_endpoint: https://thelivekindlyco.com/oauth/revoke
+  response_types_supported: [code]
+  grant_types_supported: [authorization_code, refresh_token]
+  token_endpoint_auth_methods_supported: [none]
+  client_id_metadata_document_supported: true
+  client_registration:
+    dynamic_client_registration: false
+    note: >-
+      No registration_endpoint is advertised (RFC 7591 is not offered). Instead the server sets
+      client_id_metadata_document_supported: true — the newer pattern where the client_id is an
+      HTTPS URL resolving to a client-metadata document, which is what the MCP client ecosystem
+      has moved toward.
+scopes:
+- scope: mcp
+  description: >-
+    The only scope the authorization server advertises. Grants a bearer token accepted by the MCP
+    protected resource at /wp-json/mcp/mcp-oauth-server. Scope semantics are not published; the
+    tool set it unlocks could not be enumerated because tools/list is authentication-gated.
+  flows: [authorizationCode]
+  sources:
+  - https://thelivekindlyco.com/.well-known/oauth-authorization-server
+  - https://thelivekindlyco.com/.well-known/oauth-protected-resource
+protected_resources:
+- resource: https://thelivekindlyco.com/wp-json/mcp/mcp-oauth-server
+  authorization_servers: [https://thelivekindlyco.com]
+  bearer_methods_supported: [header]
+  scopes_supported: [mcp]
+  spec: RFC 9728
+x-evidence:
+  fetched: '2026-08-04'
+  authorization_server_metadata:
+    url: https://thelivekindlyco.com/.well-known/oauth-authorization-server
+    http_status: 200
+    content_type: application/json
+    file: ../well-known/livekindly-oauth-authorization-server.json
+  protected_resource_metadata:
+    url: https://thelivekindlyco.com/.well-known/oauth-protected-resource
+    http_status: 200
+    content_type: application/json
+    file: ../well-known/livekindly-oauth-protected-resource.json
+  anonymous_token_probe: >-
+    Not attempted. Obtaining a token requires an interactive authorization grant from a
+    LIVEKINDLY WordPress account; no credential of any kind was used in building this profile.

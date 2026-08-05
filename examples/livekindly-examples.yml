@@ -1,0 +1,102 @@
+generated: '2026-08-04'
+method: probed
+source: live anonymous GETs against https://thelivekindlyco.com/wp-json/wp/v2/, 2026-08-04
+note: >-
+  Real request/response pairs captured against the live host with no credentials. Response bodies
+  are abridged to the identifying fields — the full payloads are large (each carries a
+  yoast_head HTML blob) and are reproducible from the request line as given. Every value below
+  was observed; none is illustrative.
+base_url: https://thelivekindlyco.com/wp-json/wp/v2
+examples:
+- name: List the Collective's brands
+  operation: getBrand
+  request: GET /wp/v2/brand?per_page=10&_fields=id,slug,title,link
+  status: 200
+  headers: {X-WP-Total: '4', X-WP-TotalPages: '1'}
+  response:
+  - {id: 447, slug: frys-family-food-co, title: {rendered: 'Fry&#8217;s Family Food Co.'}, link: 'https://thelivekindlyco.com/brand/frys-family-food-co/'}
+  - {id: 402, slug: like-meat, title: {rendered: Like Meat}, link: 'https://thelivekindlyco.com/brand/like-meat/'}
+  - {id: 442, slug: oumph, title: {rendered: Oumph!}, link: 'https://thelivekindlyco.com/brand/oumph/'}
+  - {id: 444, slug: the-no-meat-company, title: {rendered: The No Meat Company}, link: 'https://thelivekindlyco.com/brand/the-no-meat-company/'}
+  note: Titles are HTML-encoded; decode entities before display.
+- name: List manufacturing and distribution partners
+  operation: getPartner
+  request: GET /wp/v2/partner?per_page=10&_fields=id,slug,title,link
+  status: 200
+  headers: {X-WP-Total: '4', X-WP-TotalPages: '1'}
+  response:
+  - {id: 746, slug: phw-group, title: {rendered: PHW Group}}
+  - {id: 744, slug: rcl-foods, title: {rendered: RCL Foods}}
+  - {id: 743, slug: ospelt, title: {rendered: Ospelt}}
+  - {id: 2045, slug: coest, title: {rendered: Coest}}
+- name: Read the newsroom, newest first
+  operation: getPosts
+  request: GET /wp/v2/posts?per_page=8&_fields=slug,link,date,title
+  status: 200
+  headers: {X-WP-Total: '39', X-WP-TotalPages: '5', Link: '<...per_page=8&page=2>; rel="next"'}
+  response:
+  - {date: '2026-06-09T08:15:31', title: {rendered: LIVEKINDLY Collective is B Corp Certified}}
+  - {date: '2025-12-17T00:00:00', title: {rendered: LIVEKINDLY Collective and TiNDLE Foods Join Forces}}
+  - {date: '2025-11-19T00:00:00', title: {rendered: 'LIVEKINDLY Collective Reports Profitability, Spearheading the Plant-Based Protein Sector'}}
+  - {date: '2025-10-09T00:00:00', title: {rendered: LIVEKINDLY Collective responds to EU vote on plant-based naming rules}}
+  note: >-
+    Dates on the older releases are date-only in the source and serialize with a zeroed time
+    component. Sort on `date_gmt` if ordering matters.
+- name: List open roles
+  operation: getJob
+  request: GET /wp/v2/job?per_page=10&_fields=slug,title,link
+  status: 200
+  headers: {X-WP-Total: '6', X-WP-TotalPages: '1'}
+  response:
+  - {title: {rendered: Business Process Lead (Record to Report)}, link: 'https://thelivekindlyco.com/job/business-process-lead-record-to-report/'}
+  - {title: {rendered: Accounting Intern}}
+  - {title: {rendered: Sr. Food Scientist}}
+  - {title: {rendered: Engineering Manager}}
+- name: Post taxonomy with counts
+  operation: getCategories
+  request: GET /wp/v2/categories?_fields=slug,name,count
+  status: 200
+  response:
+  - {count: 22, name: LiveKindly Blog, slug: livekindly-blog}
+  - {count: 9, name: Stories, slug: stories}
+  - {count: 14, name: Uncategorized, slug: uncategorized}
+- name: Pagination signalling
+  operation: getPosts
+  request: GET /wp/v2/posts?per_page=1
+  status: 200
+  headers:
+    X-WP-Total: '39'
+    X-WP-TotalPages: '39'
+    Link: '<https://thelivekindlyco.com/wp-json/wp/v2/posts?per_page=1&page=2>; rel="next"'
+    access-control-expose-headers: 'X-WP-Total, X-WP-TotalPages, Link'
+    cache-control: max-age=0
+  note: The pagination headers are CORS-exposed, so a browser client can read them.
+error_examples:
+- name: Unknown id
+  request: GET /wp/v2/posts/999999
+  status: 404
+  response: {code: rest_post_invalid_id, message: Invalid post ID., data: {status: 404}}
+- name: Parameter out of bounds
+  request: GET /wp/v2/posts?per_page=999
+  status: 400
+  response:
+    code: rest_invalid_param
+    message: 'Invalid parameter(s): per_page'
+    data:
+      status: 400
+      params: {per_page: per_page must be between 1 (inclusive) and 100 (inclusive)}
+- name: Unmatched route
+  request: GET /wp/v2/nonexistent-route
+  status: 404
+  response: {code: rest_no_route, message: No route was found matching the URL and request method., data: {status: 404}}
+- name: MCP without a token
+  request: 'POST /wp-json/mcp/mcp-oauth-server  {"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+  status: 401
+  headers:
+    WWW-Authenticate: 'Bearer realm="https://thelivekindlyco.com", resource_metadata="https://thelivekindlyco.com/.well-known/oauth-protected-resource"'
+  response: {code: mcp_unauthorized, message: MCP authentication required., data: {status: 401}}
+- name: Edge block (not the JSON envelope)
+  request: GET /wp/v2/users?per_page=1
+  status: 403
+  content_type: text/html
+  response: 'Sucuri WebSite Firewall — Access Denied interstitial, Block ID UAT007. No JSON body.'

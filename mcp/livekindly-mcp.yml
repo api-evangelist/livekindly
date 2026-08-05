@@ -1,0 +1,73 @@
+generated: '2026-08-04'
+method: probed
+status: published
+source: https://thelivekindlyco.com/wp-json/mcp
+server:
+  name: mcp-oauth-server
+  transport: http
+  url: https://thelivekindlyco.com/wp-json/mcp/mcp-oauth-server
+  namespace_index: https://thelivekindlyco.com/wp-json/mcp
+  methods: [POST, GET, DELETE]
+  implementation: >-
+    WordPress MCP Adapter — the "mcp" namespace is registered in the thelivekindlyco.com
+    WordPress REST route index alongside wp-abilities/v1, which is the adapter's backing ability
+    registry.
+  first_party: true
+  note: >-
+    This is the site CMS's MCP endpoint, not a LIVEKINDLY product MCP server. LIVEKINDLY
+    publishes no developer platform and advertises this endpoint nowhere; it was found by
+    enumerating https://thelivekindlyco.com/wp-json/.
+additional_servers:
+- name: mcp-adapter-default-server
+  url: https://thelivekindlyco.com/wp-json/mcp/mcp-adapter-default-server
+  methods: [POST, GET, DELETE]
+  note: >-
+    The adapter's default (non-OAuth) server. Gated by standard WordPress REST permission checks
+    rather than the OAuth layer — anonymous JSON-RPC returns rest_forbidden instead of
+    mcp_unauthorized.
+authentication:
+  gated: true
+  scheme: OAuth 2.0 authorization code + PKCE (S256), bearer token in the Authorization header
+  observed: 'anonymous JSON-RPC tools/list -> HTTP 401 {"code":"mcp_unauthorized","message":"MCP authentication required.","data":{"status":401}}'
+  also_observed: 'anonymous JSON-RPC initialize -> HTTP 401 mcp_unauthorized; mcp-adapter-default-server tools/list -> HTTP 401 rest_forbidden'
+  oauth_discovery:
+  - {path: /.well-known/oauth-authorization-server, spec: RFC 8414, status: 200, file: ../well-known/livekindly-oauth-authorization-server.json}
+  - {path: /.well-known/oauth-protected-resource, spec: RFC 9728, status: 200, file: ../well-known/livekindly-oauth-protected-resource.json}
+  authorization_endpoint: https://thelivekindlyco.com/oauth/authorize
+  token_endpoint: https://thelivekindlyco.com/oauth/token
+  revocation_endpoint: https://thelivekindlyco.com/oauth/revoke
+  scopes: [mcp]
+  client_id_metadata_document_supported: true
+  dynamic_client_registration: false
+  artifact: ../scopes/livekindly-scopes.yml
+  note: >-
+    Worth flagging: publishing RFC 8414 + RFC 9728 discovery at the site root is a materially
+    more complete OAuth posture than the typical WordPress MCP Adapter install, which relies on
+    Application Passwords. This server is set up for real third-party MCP clients even though
+    LIVEKINDLY never tells anyone it exists.
+companion_surface:
+  abilities_api: https://thelivekindlyco.com/wp-json/wp-abilities/v1/abilities
+  abilities_status: 401
+  abilities_routes:
+  - /wp-abilities/v1/abilities
+  - /wp-abilities/v1/abilities/{name}
+  - /wp-abilities/v1/abilities/{name}/run
+  - /wp-abilities/v1/categories
+  - /wp-abilities/v1/categories/{slug}
+  note: >-
+    The WordPress Abilities API registry is what the MCP Adapter projects as tools. It is gated
+    the same way, so the published tool set could not be enumerated anonymously.
+tools: []
+tools_note: >-
+  NOT AN EMPTY TOOL SET — the tool set is unknown. tools/list is authentication-gated on both
+  endpoints, the backing abilities registry is gated, and LIVEKINDLY publishes no llms.txt or
+  documentation naming any tool. There is therefore no public source for tool names or input
+  schemas, and nothing is derived or guessed here. Authenticated introspection with an
+  OAuth-issued bearer token would be required to enumerate them.
+x-evidence:
+  fetched: '2026-08-04'
+  url: https://thelivekindlyco.com/wp-json/mcp/mcp-oauth-server
+  http_status: 401
+  content_type: application/json
+  discovery_url: https://thelivekindlyco.com/wp-json/
+  namespace_index_status: 200

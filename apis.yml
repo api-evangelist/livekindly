@@ -1,18 +1,102 @@
 aid: livekindly
 name: LIVEKINDLY
-description: 'LIVEKINDLY is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'LIVEKINDLY Collective (thelivekindlyco.com) is a global plant-based food company
+  founded in March 2020 by Roger Lienhard around a mission to make plant-based living the new
+  norm. It is a house of alternative-protein brands — Fry''s Family Food Co., Like Meat, Oumph!
+  and The No Meat Company — sold across Europe, the UK, South Africa and North America, and it
+  also runs a B2B Solutions arm supplying plant-based protein to other food businesses. The
+  Collective raised over half a billion dollars across its early rounds, reported profitability in
+  November 2025, announced it was joining forces with TiNDLE Foods in December 2025, and was
+  certified as a B Corp in June 2026. LIVEKINDLY publishes no developer platform, no documentation
+  portal and no OpenAPI. The machine-readable surface on thelivekindlyco.com is its WordPress REST
+  API (wp/v2), which serves the corporate newsroom, the brand and partner directories, the careers
+  listings, pages and media library as anonymously readable JSON, alongside a WordPress MCP
+  Adapter endpoint that is live and fronted by a real RFC 8414 OAuth authorization server — but is
+  authentication-gated to a single "mcp" scope. The company is tracked on the Forge Global
+  secondary market.'
 url: https://raw.githubusercontent.com/api-evangelist/livekindly/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment-pipeline
+image: https://thelivekindlyco.com/wp-content/uploads/2021/10/cropped-lkc-favicon.png
 specificationVersion: '0.20'
 created: '2026-08-04'
 modified: '2026-08-04'
 tags:
 - Company
-apis: []
+- Food and Beverage
+- Plant-Based
+- Alternative Protein
+- Consumer Packaged Goods
+- Sustainability
+- Manufacturing
+- Retail
+- Content
+- Newsroom
+apis:
+- aid: livekindly:content
+  name: LIVEKINDLY Content API (WordPress REST wp/v2)
+  description: 'The anonymously readable WordPress REST API that thelivekindlyco.com serves at
+    /wp-json/wp/v2 — the corporate newsroom and LiveKindly Blog (39 posts), the corporate site
+    pages (19), the brand directory (custom post type `brand`: Fry''s Family Food Co., Like Meat,
+    Oumph!, The No Meat Company), the partner directory (custom post type `partner`: PHW Group,
+    RCL Foods, Ospelt, Coest), open roles (custom post type `job`, 6 listed), the media library
+    (1,145 attachments), taxonomies and a site-wide search endpoint. Responses are JSON with
+    page/per_page pagination and X-WP-Total / X-WP-TotalPages headers. This is the CMS content
+    API, not a LIVEKINDLY product API; LIVEKINDLY publishes no OpenAPI for it, so the definition
+    in this repo was derived mechanically from the live route-discovery document at
+    https://thelivekindlyco.com/wp-json/.'
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Content
+  - News
+  - Brands
+  - Partners
+  - Careers
+  - Media
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-content-openapi.yml
+  - type: Overlay
+    url: overlays/livekindly-content-overlay.yaml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:mcp
+  name: LIVEKINDLY MCP Server (WordPress MCP Adapter)
+  description: 'A Model Context Protocol server advertised in the thelivekindlyco.com WordPress
+    REST route index under the "mcp" namespace, with two endpoints — mcp-adapter-default-server
+    and mcp-oauth-server. Unlike most WordPress MCP Adapter installs, this one publishes a real
+    RFC 8414 authorization-server metadata document and an RFC 9728 protected-resource document at
+    the site root, declaring PKCE S256, authorization_code + refresh_token grants and a single
+    "mcp" scope. Both endpoints are live but authentication-gated: an anonymous JSON-RPC
+    tools/list returns HTTP 401 (mcp_unauthorized on the OAuth server, rest_forbidden on the
+    default server), as does the companion wp-abilities/v1 registry, so the published tool set
+    could not be enumerated.'
+  humanURL: https://thelivekindlyco.com/wp-json/mcp
+  baseURL: https://thelivekindlyco.com/wp-json/mcp/mcp-oauth-server
+  tags:
+  - MCP
+  - Agents
+  - OAuth
+  properties:
+  - type: MCPServer
+    url: mcp/livekindly-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/livekindly-tool-crosswalk.yml
+  - type: OAuthScopes
+    url: scopes/livekindly-scopes.yml
+x-enrichment:
+  date: '2026-08-04'
+  status: enriched
+  artifacts_added: 24
+  pass: local-v1
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +104,54 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
+  url: https://thelivekindlyco.com/
+- type: About
+  url: https://thelivekindlyco.com/the-collective/
+- type: Blog
+  url: https://thelivekindlyco.com/latest-news/
+- type: News
+  url: https://thelivekindlyco.com/latest-news/
+- type: Support
+  url: https://thelivekindlyco.com/contact/
+- type: Careers
+  url: https://thelivekindlyco.com/careers/
+- type: Team
+  url: https://thelivekindlyco.com/team/
+- type: Leadership
+  url: https://thelivekindlyco.com/directors/
+- type: Products
+  url: https://thelivekindlyco.com/b2b-solutions/
+- type: Impact
+  url: https://thelivekindlyco.com/join-the-change/
+- type: TermsOfService
+  url: https://thelivekindlyco.com/terms-of-use/
+- type: PrivacyPolicy
+  url: https://thelivekindlyco.com/privacy-policy/
+- type: LinkedIn
+  url: https://www.linkedin.com/company/the-livekindly-co
+- type: Twitter
+  url: https://twitter.com/thelivekindlyco
+- type: Sitemap
+  url: https://thelivekindlyco.com/sitemap_index.xml
+- type: Packages
+  url: packages/livekindly-packages.yml
+- type: LLMsTxt
+  url: llms/livekindly-llms.txt
+- type: WellKnown
+  url: well-known/livekindly-well-known.yml
+- type: Authentication
+  url: authentication/livekindly-authentication.yml
+- type: Conventions
+  url: conventions/livekindly-conventions.yml
+- type: Conformance
+  url: conformance/livekindly-conformance.yml
+- type: Lifecycle
+  url: lifecycle/livekindly-lifecycle.yml
+- type: DomainSecurity
+  url: security/livekindly-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/livekindly-agentic-access.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: SecondaryMarket
   url: https://forgeglobal.com/livekindly_stock/

@@ -1,0 +1,129 @@
+generated: '2026-08-04'
+method: derived
+source: >-
+  openapi/livekindly-content-openapi.yml (derived from https://thelivekindlyco.com/wp-json/) plus
+  live response headers and error bodies observed on GET /wp-json/wp/v2/posts, 2026-08-04
+api: livekindly:content
+authentication:
+  anonymous_read: true
+  scheme: WordPress Application Passwords over HTTP Basic
+  authorization_endpoint: https://thelivekindlyco.com/wp-admin/authorize-application.php
+  browser_scheme: logged-in cookie + X-WP-Nonce header
+  mcp_scheme: OAuth 2.0 authorization code + PKCE, scope "mcp"
+  artifact: authentication/livekindly-authentication.yml
+idempotency:
+  supported: false
+  note: >-
+    No idempotency key header or parameter is exposed on any of the 307 routes in the discovery
+    document, and none is documented. No Idempotency pointer is wired in apis.yml — LIVEKINDLY
+    has no idempotency contract to advertise, and asserting one would be fabrication.
+pagination:
+  style: page-number
+  request_params:
+  - {name: page, type: integer, default: 1, minimum: 1}
+  - {name: per_page, type: integer, default: 10, minimum: 1, maximum: 100}
+  - {name: offset, type: integer, note: available on collection routes}
+  response_headers:
+  - {name: X-WP-Total, meaning: total items in the collection}
+  - {name: X-WP-TotalPages, meaning: total pages at the current per_page}
+  link_header: 'RFC 8288 Link header with rel="next" / rel="prev"'
+  cors_exposed: 'access-control-expose-headers: X-WP-Total, X-WP-TotalPages, Link'
+  observed: 'GET /wp/v2/posts?per_page=1 -> X-WP-Total: 39, X-WP-TotalPages: 39, Link: <...page=2>; rel="next"'
+field_selection:
+  sparse_fields:
+    param: _fields
+    note: comma-separated list of top-level fields to return
+  expansion:
+    param: _embed
+    note: >-
+      Inlines linked resources (author, wp:featuredmedia, wp:term, replies) into _embedded,
+      driven by the _links relations each resource carries.
+  context:
+    param: context
+    values: [view, embed, edit]
+    default: view
+    note: edit context requires authentication
+ordering_and_filtering:
+  params: [search, order, orderby, slug, status, after, before, modified_after, modified_before,
+    include, exclude, categories, categories_exclude, tags, tags_exclude, author, author_exclude,
+    parent, parent_exclude, menu_order, sticky, offset]
+  custom_taxonomy_filters: [feed_category]
+  note: taken verbatim from the route args in the discovery document
+metadata:
+  field: meta
+  note: >-
+    Registered post meta. Every resource also returns an `acf` object (Advanced Custom Fields),
+    a `class_list` array, and Yoast's `yoast_head` / `yoast_head_json` SEO blocks — the last of
+    these is where the site's structured Schema.org data is exposed as JSON.
+request_tracing:
+  request_id_header: null
+  note: >-
+    No request-id or correlation header is emitted by the application. The site is fronted by
+    Sucuri CloudProxy, which returns x-sucuri-id and x-sucuri-cache — edge identifiers, not an
+    application request id.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  namespaces_present:
+  - wp/v2
+  - wp-site-health/v1
+  - wp-block-editor/v1
+  - wp-abilities/v1
+  - mcp
+  - oembed/1.0
+  - yoast/v1
+  - cptui/v1
+  - wpforms/v1
+  - contact-form-7/v1
+  - redirection/v1
+  - wordfence/v1
+  - wp-rocket/v1
+  - duplicator/v1
+  - duplicate-post/v1
+  - regenerate-thumbnails/v1
+  - chimpmatic-lite/v1
+  - cmatic
+  - cmatic/v1
+  - bsf-custom-fonts/v1
+  - custom-fonts/v1
+  artifact: lifecycle/livekindly-lifecycle.yml
+error_envelope:
+  format: wordpress-rest
+  rfc9457: false
+  shape: '{"code": "<string>", "message": "<human string>", "data": {"status": <int>}}'
+  observed: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+  validation_shape: >-
+    Validation failures extend data with params{} and details{} — e.g.
+    {"code":"rest_invalid_param","message":"Invalid parameter(s): per_page","data":{"status":400,
+    "params":{"per_page":"per_page must be between 1 (inclusive) and 100 (inclusive)"},
+    "details":{"per_page":{"code":"rest_out_of_bounds", ...}}}}
+  artifact: errors/livekindly-problem-types.yml
+rate_limiting:
+  documented: false
+  headers_observed: []
+  note: >-
+    No X-RateLimit-* or Retry-After headers observed on any anonymous GET. The site sits behind
+    Sucuri CloudProxy (a WAF), so edge rate limiting and bot filtering almost certainly exist but
+    are not advertised. robots.txt sets no Crawl-delay and disallows nothing.
+caching:
+  headers_observed:
+  - 'cache-control: max-age=0 (on wp/v2 JSON responses)'
+  - 'cache-control: max-age=3600 (on the /.well-known/ OAuth documents)'
+  - 'expires: <now> (JSON responses)'
+  - 'x-sucuri-cache: BYPASS on wp/v2, HIT on /.well-known/'
+  conditional_requests: 'No ETag or Last-Modified emitted on wp/v2 JSON — conditional GET is not supported.'
+security_headers:
+  observed:
+  - 'x-content-type-options: nosniff'
+  - 'x-frame-options: SAMEORIGIN'
+  - 'x-xss-protection: 1; mode=block'
+  - 'content-security-policy: upgrade-insecure-requests;'
+  - 'x-robots-tag: noindex (on wp/v2 responses)'
+  missing:
+  - strict-transport-security
+cross_links:
+  errors: errors/livekindly-problem-types.yml
+  lifecycle: lifecycle/livekindly-lifecycle.yml
+  authentication: authentication/livekindly-authentication.yml
+  scopes: scopes/livekindly-scopes.yml
+  data_model: data-model/livekindly-data-model.yml

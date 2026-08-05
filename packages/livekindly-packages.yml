@@ -1,0 +1,42 @@
+generated: '2026-08-04'
+method: searched
+source: >-
+  public package-registry searches plus a review of every LIVEKINDLY web property, 2026-08-04
+note: >-
+  LIVEKINDLY Collective ships no client library, no SDK and no CLI. It publishes no product API to
+  wrap: the only machine-readable surfaces on thelivekindlyco.com are the WordPress REST content
+  API and an authentication-gated WordPress MCP Adapter endpoint, both of which are consumed with
+  a plain HTTP client. Nothing here is a gap being papered over — a consumer-packaged-goods
+  company with no developer program has nothing to publish. Recorded so a later round does not
+  re-run the same searches.
+sdk_count: 0
+api_clients: 0
+packages: []
+registries_probed:
+- {registry: npm, query: 'livekindly / livekindly-collective / thelivekindlyco / oumph / likemeat', result: no first-party package}
+- {registry: pypi, query: 'livekindly / livekindly-collective', result: 404}
+- {registry: rubygems, query: 'livekindly / livekindly-collective', result: 404}
+- {registry: packagist, query: 'livekindly / livekindly-collective', result: 404}
+- {registry: nuget, query: livekindly, result: 0 hits}
+- {registry: crates.io, query: livekindly, result: no crate}
+- {registry: maven-central, query: livekindly, result: no artifact}
+- {registry: pkg.go.dev, query: livekindly, result: no module}
+source_control:
+  github_org_claimed: null
+  note: >-
+    github.com/livekindly exists (created 2022-02-01) but is an EMPTY placeholder — no name, no
+    description, no website, no location and zero public repositories. There is nothing tying it
+    to LIVEKINDLY Collective, and the company links to no GitHub organization from any of its
+    pages. No GitHubOrganization pointer is wired in apis.yml: asserting one on the strength of a
+    matching handle would be a guess, not evidence.
+  probed:
+  - {org: livekindly, http_status: 200, public_repos: 0, name: null, description: null}
+  - {org: livekindlyco, http_status: 404}
+  - {org: thelivekindlyco, http_status: 404}
+  - {org: livekindly-collective, http_status: 404}
+consumption_note: >-
+  To use what LIVEKINDLY does expose, no package is needed. The content API is anonymous HTTP GET
+  against https://thelivekindlyco.com/wp-json/wp/v2 — any HTTP client works, and any generic
+  WordPress REST client library (none of them first-party) will bind to it. The MCP endpoint is
+  reachable by any standard MCP client that can complete an OAuth authorization-code + PKCE flow;
+  see mcp/livekindly-mcp.yml and scopes/livekindly-scopes.yml.

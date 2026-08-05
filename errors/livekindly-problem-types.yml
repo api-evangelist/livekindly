@@ -1,0 +1,111 @@
+generated: '2026-08-04'
+method: derived
+source: >-
+  openapi/livekindly-content-openapi.yml plus live error bodies observed against
+  https://thelivekindlyco.com/wp-json/, 2026-08-04
+format: wordpress-rest
+rfc9457: false
+note: >-
+  LIVEKINDLY publishes no error reference — there is no developer documentation to search. The
+  catalog below is the WordPress REST error envelope as it was actually observed on this host,
+  plus the codes the derived OpenAPI's 4xx/5xx responses cover. Codes are recorded only where a
+  live response produced them or where the route args make the condition unambiguous; no
+  WordPress code was copied in from elsewhere on the assumption it "would" fire here.
+envelope:
+  content_type: application/json
+  shape: '{"code": "<machine string>", "message": "<human string>", "data": {"status": <int>}}'
+  validation_extension: 'data.params{field: message} and data.details{field: {code, message, data}}'
+  status_location: data.status
+  note: >-
+    The HTTP status is duplicated inside the body at data.status. There is no `type` URI, no
+    `instance`, and no trace or request identifier in the envelope — an agent has nothing stable
+    to link an error back to a specific call.
+problems:
+- status: 404
+  code: rest_post_invalid_id
+  title: Invalid post ID
+  observed: true
+  observed_body: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+  observed_request: GET /wp-json/wp/v2/posts/999999
+  remediation: Request an id returned by the matching collection operation.
+  source_operations: [getPostsById, getPagesById, getBrandById, getPartnerById, getJobById, getMediaById]
+- status: 400
+  code: rest_invalid_param
+  title: Invalid parameter(s)
+  observed: true
+  observed_body: '{"code":"rest_invalid_param","message":"Invalid parameter(s): per_page","data":{"status":400,"params":{"per_page":"per_page must be between 1 (inclusive) and 100 (inclusive)"},"details":{"per_page":{"code":"rest_out_of_bounds","message":"per_page must be between 1 (inclusive) and 100 (inclusive)","data":null}}}}'
+  observed_request: GET /wp-json/wp/v2/posts?per_page=999
+  remediation: >-
+    Read data.params for the per-field message. The bounds are published in the derived OpenAPI
+    (per_page 1–100, page minimum 1) — validate client-side first.
+  nested_codes: [rest_out_of_bounds]
+  source_operations: [every collection operation]
+- status: 401
+  code: rest_forbidden
+  title: Not allowed
+  observed: true
+  observed_body: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'
+  observed_request: POST /wp-json/mcp/mcp-adapter-default-server (tools/list), GET /wp-json/wp-abilities/v1/abilities
+  remediation: >-
+    Authenticate. For wp/v2 writes use a WordPress Application Password over HTTP Basic; for the
+    MCP endpoints use an OAuth bearer token with the "mcp" scope.
+  note: >-
+    Note the status/semantic mismatch — WordPress returns 401 with a code named "forbidden" for
+    an unauthenticated request. Agents keying off the code string rather than the status will
+    misclassify this as an authorization failure.
+- status: 401
+  code: mcp_unauthorized
+  title: MCP authentication required
+  observed: true
+  observed_body: '{"code":"mcp_unauthorized","message":"MCP authentication required.","data":{"status":401}}'
+  observed_request: POST /wp-json/mcp/mcp-oauth-server (tools/list and initialize)
+  remediation: >-
+    Complete the OAuth authorization-code + PKCE flow at
+    https://thelivekindlyco.com/oauth/authorize and present the bearer token in the Authorization
+    header. See scopes/livekindly-scopes.yml.
+  source_operations: [mcp tools/list, mcp initialize]
+- status: 403
+  code: null
+  title: Access Denied — Sucuri Website Firewall
+  observed: true
+  observed_status: 403
+  observed_request: GET /wp-json/wp/v2/users?per_page=1
+  content_type: text/html
+  envelope: none
+  block_id: UAT007
+  remediation: >-
+    This is an EDGE block, not an application error. The Sucuri WAF in front of the site returns
+    an HTML interstitial with a Block ID and no JSON body, so a JSON client gets a parse failure
+    rather than a structured error. Author/user enumeration is the route that triggered it here.
+  note: >-
+    The most operationally significant error behaviour on this host: any request the WAF dislikes
+    breaks the JSON contract entirely. Clients must branch on content-type, not assume JSON.
+  source_operations: [getUsers, getUsersById, getUsersMe]
+- status: 404
+  code: rest_no_route
+  title: No route was found matching the URL and request method
+  observed: true
+  observed_body: '{"code":"rest_no_route","message":"No route was found matching the URL and request method.","data":{"status":404}}'
+  observed_request: GET /wp-json/wp/v2/nonexistent-route
+  remediation: Check the route against https://thelivekindlyco.com/wp-json/ (saved at openapi/_source/).
+status_codes_declared:
+- {status: 200, meaning: OK}
+- {status: 400, meaning: parameter validation failure}
+- {status: 401, meaning: authentication required (rest_forbidden / mcp_unauthorized)}
+- {status: 403, meaning: Sucuri WAF edge block — HTML interstitial, not the JSON envelope}
+- {status: 404, meaning: unknown id or unmatched route}
+gaps:
+- No RFC 9457 problem+json; no `type` URI to dereference.
+- No error code registry is published by LIVEKINDLY; this catalog is observation-derived only.
+- No request/correlation id in the envelope or headers, so errors cannot be reported back to the
+  provider with a trace reference.
+- Not all failures are JSON — the Sucuri WAF returns an HTML block page with a 403, so error
+  handling cannot assume the documented envelope.
+strengths:
+- >-
+  The MCP 401 is genuinely well-formed for an agent: it carries
+  'WWW-Authenticate: Bearer realm="https://thelivekindlyco.com",
+  resource_metadata="https://thelivekindlyco.com/.well-known/oauth-protected-resource"',
+  which is exactly the RFC 9728 challenge an MCP client needs to discover the authorization
+  server from the failure alone. That is better failure ergonomics than most providers in the
+  catalog manage, and it exists on a corporate marketing site with no developer program at all.

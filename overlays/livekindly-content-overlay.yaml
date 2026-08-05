@@ -1,0 +1,98 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the LIVEKINDLY Content API
+  version: 1.0.0
+extends: openapi/livekindly-content-openapi.yml
+x-generated: '2026-08-04'
+x-method: generated
+x-source: >-
+  API Evangelist enrichment pipeline. Captures the annotations API Evangelist adds on top of the
+  definition derived from https://thelivekindlyco.com/wp-json/ — the original derived document is
+  never mutated.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apis.io/provider/livekindly/
+    x-provider-published-spec: false
+    x-derivation-basis: WordPress REST route-discovery document
+    x-agent-readiness-notes: >-
+      Anonymous read on every content collection, page/per_page pagination with X-WP-Total
+      headers, and a well-formed RFC 9728 bearer challenge on the MCP endpoint. Against that:
+      no idempotency contract, no rate-limit signalling, no request id, no conditional requests,
+      no RFC 9457 errors, and a WAF that can replace the JSON envelope with an HTML block page.
+- target: $.info
+  update:
+    x-artifacts:
+      conventions: conventions/livekindly-conventions.yml
+      errors: errors/livekindly-problem-types.yml
+      data_model: data-model/livekindly-data-model.yml
+      examples: examples/livekindly-examples.yml
+      authentication: authentication/livekindly-authentication.yml
+      lifecycle: lifecycle/livekindly-lifecycle.yml
+      agentic_access: agentic-access/livekindly-agentic-access.yml
+      skills: skills/_index.yml
+- target: $.paths['/wp/v2/brand'].get
+  update:
+    summary: List LIVEKINDLY Collective brands
+    description: >-
+      Returns the Collective's operating brands. Four are published: Fry's Family Food Co., Like
+      Meat, Oumph! and The No Meat Company. The custom post type is registered without content,
+      excerpt or featured media, so each item carries only title, slug, link and SEO metadata.
+    x-item-count-observed: 4
+    x-thin-registration: true
+- target: $.paths['/wp/v2/partner'].get
+  update:
+    summary: List LIVEKINDLY Collective partners
+    description: >-
+      Returns the Collective's manufacturing and distribution partners. Four are published: PHW
+      Group, RCL Foods, Ospelt and Coest. Same thin registration as brand.
+    x-item-count-observed: 4
+    x-thin-registration: true
+- target: $.paths['/wp/v2/job'].get
+  update:
+    summary: List open roles at LIVEKINDLY Collective
+    description: >-
+      Returns published job listings — six at time of profiling. No location, department,
+      employment type or salary field is exposed; the role body lives only on the HTML page at
+      `link`.
+    x-item-count-observed: 6
+    x-thin-registration: true
+- target: $.paths['/wp/v2/posts'].get
+  update:
+    summary: List newsroom releases and LiveKindly Blog articles
+    description: >-
+      The richest collection in the API — full rendered content, categories, author and featured
+      media. 39 posts published, most recent 2026-06-09.
+    x-item-count-observed: 39
+- target: $.paths['/wp/v2/media'].get
+  update:
+    summary: List media library assets
+    description: >-
+      1,145 attachments — product photography, brand assets and newsroom imagery, with populated
+      alt_text, caption and the full generated size set in media_details.
+    x-item-count-observed: 1145
+- target: $.paths['/wp/v2/pages'].get
+  update:
+    summary: List corporate pages
+    x-item-count-observed: 19
+- target: $.paths['/wp/v2/users'].get
+  update:
+    x-edge-blocked: true
+    x-edge-block-note: >-
+      Returns HTTP 403 with a Sucuri WAF HTML interstitial (Block ID UAT007) rather than the
+      WordPress JSON error envelope. Author enumeration is not available anonymously.
+- target: $.components.securitySchemes
+  update:
+    mcpOAuth:
+      type: oauth2
+      description: >-
+        Not used by wp/v2. Documented here because the same host runs an OAuth-protected MCP
+        server discovered at /.well-known/oauth-authorization-server. See
+        scopes/livekindly-scopes.yml.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://thelivekindlyco.com/oauth/authorize
+          tokenUrl: https://thelivekindlyco.com/oauth/token
+          refreshUrl: https://thelivekindlyco.com/oauth/token
+          scopes:
+            mcp: The single scope the LIVEKINDLY authorization server advertises.

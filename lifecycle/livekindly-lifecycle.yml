@@ -1,0 +1,80 @@
+generated: '2026-08-04'
+method: derived
+source: >-
+  openapi/livekindly-content-openapi.yml, https://thelivekindlyco.com/wp-json/ and live probes of
+  the LIVEKINDLY corporate site, 2026-08-04
+note: >-
+  LIVEKINDLY runs no API program, so there is no versioning policy, no deprecation policy, no SLA
+  and no status page to find. The versioning below is WordPress's own namespace scheme, recorded
+  as observed. Every "absent" entry was probed, not assumed — and because none of them exist, no
+  StatusPage or Deprecation pointer is wired in apis.yml.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  docs: null
+  policy_published: false
+  note: >-
+    Version is carried in the path namespace (/wp-json/wp/v2/...). It is set by the WordPress
+    core release the site runs, not by LIVEKINDLY, and it changes only when WordPress itself
+    ships a new REST namespace. There is no LIVEKINDLY-controlled version contract.
+  namespaces_registered: 21
+  namespace_note: >-
+    Fifteen of the 21 registered namespaces belong to third-party plugins (Yoast, WPForms,
+    Contact Form 7, Redirection, Wordfence, WP Rocket, Duplicator, Custom Post Type UI,
+    Chimpmatic/MailChimp, Regenerate Thumbnails, custom fonts). Their routes appear and disappear
+    with plugin updates that LIVEKINDLY does not announce, so the effective public surface of
+    this host is unstable by construction.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    No RFC 8594 Sunset or Deprecation header observed on any response. No deprecation policy page
+    exists.
+deprecated_operations: []
+deprecated_operations_note: >-
+  No operation in the derived OpenAPI is marked deprecated — the WordPress route-discovery
+  document exposes no deprecation flag.
+sla:
+  url: null
+  uptime_target: null
+  published: false
+status_page:
+  url: null
+  published: false
+  probed:
+  - {url: 'https://status.thelivekindlyco.com/', result: NXDOMAIN}
+  - {url: 'https://thelivekindlyco.com/status/', result: 404}
+  note: >-
+    No status page of any kind. Availability is whatever the Sucuri CloudProxy edge and the
+    origin WordPress host deliver.
+support:
+  url: https://thelivekindlyco.com/contact/
+  channel: web contact form (Contact Form 7 / WPForms)
+  developer_support: false
+  note: A general corporate contact form. There is no developer or API support channel.
+changelog:
+  api_changelog: null
+  published: false
+  note: >-
+    No API changelog. The nearest thing to a public change record is the corporate newsroom at
+    https://thelivekindlyco.com/latest-news/ (39 posts, most recent 2026-06-09), which announces
+    company milestones — B Corp certification (2026-06-09), joining forces with TiNDLE Foods
+    (2025-12-17), reported profitability (2025-11-19) — not API changes. No ChangeLog pointer is
+    wired because there is nothing that changelogs the API.
+content_freshness:
+  most_recent_post: '2026-06-09'
+  most_recent_post_title: LIVEKINDLY Collective is B Corp Certified
+  posts_total: 39
+  pages_total: 19
+  jobs_total: 6
+  jobs_sitemap_lastmod: '2022-01-17'
+  note: >-
+    The job sitemap has not been regenerated since January 2022 even though six roles are live in
+    the REST API — a discoverability gap between what the JSON surface serves and what the site
+    advertises to crawlers.
+certificate:
+  host: thelivekindlyco.com
+  expires: '2026-09-05'
+  note: See security/livekindly-domain-security.yml.
