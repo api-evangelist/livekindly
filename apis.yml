@@ -35,50 +35,17 @@ tags:
 - Content
 - Newsroom
 apis:
-- aid: livekindly:content
-  name: LIVEKINDLY Content API (WordPress REST wp/v2)
-  description: 'The anonymously readable WordPress REST API that thelivekindlyco.com serves at
-    /wp-json/wp/v2 — the corporate newsroom and LiveKindly Blog (39 posts), the corporate site
-    pages (19), the brand directory (custom post type `brand`: Fry''s Family Food Co., Like Meat,
-    Oumph!, The No Meat Company), the partner directory (custom post type `partner`: PHW Group,
-    RCL Foods, Ospelt, Coest), open roles (custom post type `job`, 6 listed), the media library
-    (1,145 attachments), taxonomies and a site-wide search endpoint. Responses are JSON with
-    page/per_page pagination and X-WP-Total / X-WP-TotalPages headers. This is the CMS content
-    API, not a LIVEKINDLY product API; LIVEKINDLY publishes no OpenAPI for it, so the definition
-    in this repo was derived mechanically from the live route-discovery document at
-    https://thelivekindlyco.com/wp-json/.'
-  humanURL: https://thelivekindlyco.com/latest-news/
-  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
-  tags:
-  - Content
-  - News
-  - Brands
-  - Partners
-  - Careers
-  - Media
-  - Search
-  properties:
-  - type: OpenAPI
-    url: openapi/livekindly-content-openapi.yml
-  - type: Overlay
-    url: overlays/livekindly-content-overlay.yaml
-  - type: DataModel
-    url: data-model/livekindly-data-model.yml
-  - type: ErrorCatalog
-    url: errors/livekindly-problem-types.yml
-  - type: Examples
-    url: examples/livekindly-examples.yml
 - aid: livekindly:mcp
   name: LIVEKINDLY MCP Server (WordPress MCP Adapter)
-  description: 'A Model Context Protocol server advertised in the thelivekindlyco.com WordPress
-    REST route index under the "mcp" namespace, with two endpoints — mcp-adapter-default-server
-    and mcp-oauth-server. Unlike most WordPress MCP Adapter installs, this one publishes a real
-    RFC 8414 authorization-server metadata document and an RFC 9728 protected-resource document at
-    the site root, declaring PKCE S256, authorization_code + refresh_token grants and a single
-    "mcp" scope. Both endpoints are live but authentication-gated: an anonymous JSON-RPC
-    tools/list returns HTTP 401 (mcp_unauthorized on the OAuth server, rest_forbidden on the
-    default server), as does the companion wp-abilities/v1 registry, so the published tool set
-    could not be enumerated.'
+  description: >-
+    A Model Context Protocol server advertised in the thelivekindlyco.com WordPress REST route index under
+    the "mcp" namespace, with two endpoints — mcp-adapter-default-server and mcp-oauth-server. Unlike
+    most WordPress MCP Adapter installs, this one publishes a real RFC 8414 authorization-server metadata
+    document and an RFC 9728 protected-resource document at the site root, declaring PKCE S256, authorization_code
+    + refresh_token grants and a single "mcp" scope. Both endpoints are live but authentication-gated:
+    an anonymous JSON-RPC tools/list returns HTTP 401 (mcp_unauthorized on the OAuth server, rest_forbidden
+    on the default server), as does the companion wp-abilities/v1 registry, so the published tool set
+    could not be enumerated.
   humanURL: https://thelivekindlyco.com/wp-json/mcp
   baseURL: https://thelivekindlyco.com/wp-json/mcp/mcp-oauth-server
   tags:
@@ -92,6 +59,198 @@ apis:
     url: mcp/livekindly-tool-crosswalk.yml
   - type: OAuthScopes
     url: scopes/livekindly-scopes.yml
+- aid: livekindly:livekindly-brands-api
+  name: LIVEKINDLY Brands API
+  description: The Brands API from LIVEKINDLY — 2 operation(s) for brands.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Brands
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-brands-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:livekindly-careers-api
+  name: LIVEKINDLY Careers API
+  description: The Careers API from LIVEKINDLY — 2 operation(s) for careers.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Careers
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-careers-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:livekindly-comments-api
+  name: LIVEKINDLY Comments API
+  description: The Comments API from LIVEKINDLY — 2 operation(s) for comments.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Comments
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-comments-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:livekindly-discovery-api
+  name: LIVEKINDLY Discovery API
+  description: The Discovery API from LIVEKINDLY — 7 operation(s) for discovery.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-discovery-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:livekindly-media-api
+  name: LIVEKINDLY Media API
+  description: The Media API from LIVEKINDLY — 4 operation(s) for media.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Media
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-media-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:livekindly-pages-api
+  name: LIVEKINDLY Pages API
+  description: The Pages API from LIVEKINDLY — 4 operation(s) for pages.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Pages
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-pages-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:livekindly-partners-api
+  name: LIVEKINDLY Partners API
+  description: The Partners API from LIVEKINDLY — 2 operation(s) for partners.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Partners
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-partners-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:livekindly-posts-api
+  name: LIVEKINDLY Posts API
+  description: The Posts API from LIVEKINDLY — 4 operation(s) for posts.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Posts
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-posts-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:livekindly-search-api
+  name: LIVEKINDLY Search API
+  description: The Search API from LIVEKINDLY — 1 operation(s) for search.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-search-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:livekindly-settings-api
+  name: LIVEKINDLY Settings API
+  description: The Settings API from LIVEKINDLY — 1 operation(s) for settings.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Settings
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-settings-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:livekindly-taxonomy-api
+  name: LIVEKINDLY Taxonomy API
+  description: The Taxonomy API from LIVEKINDLY — 6 operation(s) for taxonomy.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Taxonomy
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-taxonomy-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
+- aid: livekindly:livekindly-users-api
+  name: LIVEKINDLY Users API
+  description: The Users API from LIVEKINDLY — 6 operation(s) for users.
+  humanURL: https://thelivekindlyco.com/latest-news/
+  baseURL: https://thelivekindlyco.com/wp-json/wp/v2
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/livekindly-users-api-openapi.yml
+  - type: DataModel
+    url: data-model/livekindly-data-model.yml
+  - type: ErrorCatalog
+    url: errors/livekindly-problem-types.yml
+  - type: Examples
+    url: examples/livekindly-examples.yml
 x-enrichment:
   date: '2026-08-04'
   status: enriched
@@ -103,6 +262,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/livekindly-content-overlay.yaml
 - type: Website
   url: https://thelivekindlyco.com/
 - type: About
