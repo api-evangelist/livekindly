@@ -1,0 +1,50 @@
+{
+  "provider": "livekindly",
+  "sources": [
+    "livekindly-brands-api-openapi.yml",
+    "livekindly-careers-api-openapi.yml",
+    "livekindly-comments-api-openapi.yml",
+    "livekindly-discovery-api-openapi.yml",
+    "livekindly-media-api-openapi.yml",
+    "livekindly-pages-api-openapi.yml",
+    "livekindly-partners-api-openapi.yml",
+    "livekindly-posts-api-openapi.yml",
+    "livekindly-search-api-openapi.yml",
+    "livekindly-settings-api-openapi.yml",
+    "livekindly-taxonomy-api-openapi.yml",
+    "livekindly-users-api-openapi.yml"
+  ],
+  "outputs": [
+    "livekindly-brands-api-openapi.yml",
+    "livekindly-careers-api-openapi.yml",
+    "livekindly-comments-api-openapi.yml",
+    "livekindly-discovery-api-openapi.yml",
+    "livekindly-media-api-openapi.yml",
+    "livekindly-pages-api-openapi.yml",
+    "livekindly-partners-api-openapi.yml",
+    "livekindly-posts-api-openapi.yml",
+    "livekindly-search-api-openapi.yml",
+    "livekindly-settings-api-openapi.yml",
+    "livekindly-taxonomy-api-openapi.yml",
+    "livekindly-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "livekindly-brands-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "livekindly-careers-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "livekindly-comments-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "livekindly-discovery-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "livekindly-media-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "livekindly-pages-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "livekindly-partners-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "livekindly-posts-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "livekindly-search-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "livekindly-settings-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "livekindly-taxonomy-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "livekindly-users-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": []
+}

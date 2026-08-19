@@ -1,0 +1,194 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LIVEKINDLY Content API (WordPress REST wp/v2) Discovery API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Discovery",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /wp/v2",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://thelivekindlyco.com/wp-json/wp/v2",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "namespace",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "GET /wp/v2"
+        },
+        {
+          "info": {
+            "name": "GET /wp/v2/statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://thelivekindlyco.com/wp-json/wp/v2/statuses",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              }
+            ]
+          },
+          "docs": "GET /wp/v2/statuses"
+        },
+        {
+          "info": {
+            "name": "GET /wp/v2/statuses/(?P<status>[\\w-]+)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://thelivekindlyco.com/wp-json/wp/v2/statuses/:status",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "An alphanumeric identifier for the status."
+              }
+            ]
+          },
+          "docs": "GET /wp/v2/statuses/(?P<status>[\\w-]+)"
+        },
+        {
+          "info": {
+            "name": "GET /wp/v2/taxonomies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://thelivekindlyco.com/wp-json/wp/v2/taxonomies",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to taxonomies associated with a specific post type."
+              }
+            ]
+          },
+          "docs": "GET /wp/v2/taxonomies"
+        },
+        {
+          "info": {
+            "name": "GET /wp/v2/taxonomies/(?P<taxonomy>[\\w-]+)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://thelivekindlyco.com/wp-json/wp/v2/taxonomies/:taxonomy",
+            "params": [
+              {
+                "name": "taxonomy",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              },
+              {
+                "name": "taxonomy",
+                "value": "",
+                "type": "query",
+                "description": "An alphanumeric identifier for the taxonomy."
+              }
+            ]
+          },
+          "docs": "GET /wp/v2/taxonomies/(?P<taxonomy>[\\w-]+)"
+        },
+        {
+          "info": {
+            "name": "GET /wp/v2/types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://thelivekindlyco.com/wp-json/wp/v2/types",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              }
+            ]
+          },
+          "docs": "GET /wp/v2/types"
+        },
+        {
+          "info": {
+            "name": "GET /wp/v2/types/(?P<type>[\\w-]+)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://thelivekindlyco.com/wp-json/wp/v2/types/:type",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "An alphanumeric identifier for the post type."
+              }
+            ]
+          },
+          "docs": "GET /wp/v2/types/(?P<type>[\\w-]+)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
