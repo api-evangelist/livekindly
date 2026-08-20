@@ -51,6 +51,10 @@ apis:
   tags:
   - MCP
   - Agents
+  - Authentication
+  tags_raw:
+  - MCP
+  - Agents
   - OAuth
   properties:
   - type: MCPServer
@@ -241,6 +245,8 @@ apis:
   humanURL: https://thelivekindlyco.com/latest-news/
   baseURL: https://thelivekindlyco.com/wp-json/wp/v2
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
