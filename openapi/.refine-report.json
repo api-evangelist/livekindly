@@ -32,18 +32,6 @@
   "errors": [],
   "warnings": [],
   "notes": [
-    "livekindly-brands-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "livekindly-careers-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "livekindly-comments-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "livekindly-discovery-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "livekindly-media-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "livekindly-pages-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "livekindly-partners-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "livekindly-posts-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "livekindly-search-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "livekindly-settings-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "livekindly-taxonomy-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "livekindly-users-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "apis.yml register: already-registered"
   ],
   "skipped": []
