@@ -3,10 +3,7 @@ info:
   title: LIVEKINDLY Content API (WordPress REST wp/v2) Posts API
   version: wp/v2
   summary: 'Public read surface of thelivekindlyco.com content: newsroom posts, corporate pages, the brand and partner directories, open roles, media and site search.'
-  description: 'LIVEKINDLY Collective publishes thelivekindlyco.com on WordPress, which exposes the WordPress REST API at https://thelivekindlyco.com/wp-json/. The wp/v2 namespace is anonymously readable and returns the company newsroom and LiveKindly Blog, corporate pages, the `brand` directory (Fry’s Family Food Co., Like Meat, Oumph!, The No Meat Company), the `partner` directory (PHW Group, RCL Foods, Ospelt, Coest), the `job` careers listings, the media library, taxonomies and a site-wide search endpoint as JSON.
-
-
-    This document was DERIVED mechanically by API Evangelist from the route-discovery document served at https://thelivekindlyco.com/wp-json/ on 2026-08-04 — every path, method and parameter below is taken verbatim from that descriptor. LIVEKINDLY does not publish an OpenAPI definition of its own, and this is not a product API: it is the content API the CMS exposes. Write operations exist on these routes but require authentication (WordPress Application Passwords over HTTP Basic).'
+  description: LIVEKINDLY Collective publishes thelivekindlyco.com on WordPress, which exposes the WordPress REST API at https://thelivekindlyco.com/wp-json/.
   contact:
     name: LIVEKINDLY Collective
     url: https://thelivekindlyco.com/
@@ -427,7 +424,7 @@ paths:
   /wp/v2/posts/{id}:
     get:
       operationId: getPostsById
-      summary: GET /wp/v2/posts/(?P<id>[\d]+)
+      summary: GET /wp/v2/posts/(?P[\d]+)
       tags:
       - Posts
       parameters:
@@ -483,7 +480,7 @@ paths:
       x-anonymous-access: true
     post:
       operationId: createPostsById
-      summary: POST /wp/v2/posts/(?P<id>[\d]+)
+      summary: POST /wp/v2/posts/(?P[\d]+)
       tags:
       - Posts
       parameters:
@@ -607,7 +604,7 @@ paths:
       x-anonymous-access: false
     delete:
       operationId: deletePostsById
-      summary: DELETE /wp/v2/posts/(?P<id>[\d]+)
+      summary: DELETE /wp/v2/posts/(?P[\d]+)
       tags:
       - Posts
       parameters:
@@ -651,7 +648,7 @@ paths:
   /wp/v2/posts/{parent}/revisions:
     get:
       operationId: getPostsByParentRevisions
-      summary: GET /wp/v2/posts/(?P<parent>[\d]+)/revisions
+      summary: GET /wp/v2/posts/(?P[\d]+)/revisions
       tags:
       - Posts
       parameters:
@@ -767,7 +764,7 @@ paths:
   /wp/v2/posts/{parent}/revisions/{id}:
     get:
       operationId: getPostsByParentRevisionsById
-      summary: GET /wp/v2/posts/(?P<parent>[\d]+)/revisions/(?P<id>[\d]+)
+      summary: GET /wp/v2/posts/(?P[\d]+)/revisions/(?P[\d]+)
       tags:
       - Posts
       parameters:
@@ -822,7 +819,7 @@ paths:
       x-anonymous-access: true
     delete:
       operationId: deletePostsByParentRevisionsById
-      summary: DELETE /wp/v2/posts/(?P<parent>[\d]+)/revisions/(?P<id>[\d]+)
+      summary: DELETE /wp/v2/posts/(?P[\d]+)/revisions/(?P[\d]+)
       tags:
       - Posts
       parameters:

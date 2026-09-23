@@ -1,18 +1,7 @@
 {
   "provider": "livekindly",
   "sources": [
-    "livekindly-brands-api-openapi.yml",
-    "livekindly-careers-api-openapi.yml",
-    "livekindly-comments-api-openapi.yml",
-    "livekindly-discovery-api-openapi.yml",
-    "livekindly-media-api-openapi.yml",
-    "livekindly-pages-api-openapi.yml",
-    "livekindly-partners-api-openapi.yml",
-    "livekindly-posts-api-openapi.yml",
-    "livekindly-search-api-openapi.yml",
-    "livekindly-settings-api-openapi.yml",
-    "livekindly-taxonomy-api-openapi.yml",
-    "livekindly-users-api-openapi.yml"
+    "_ae-authored/livekindly-content-openapi.yml"
   ],
   "outputs": [
     "livekindly-brands-api-openapi.yml",
@@ -32,7 +21,22 @@
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (0 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "livekindly-content-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "livekindly-brands-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "livekindly-careers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "livekindly-comments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "livekindly-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "livekindly-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "livekindly-pages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "livekindly-partners-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "livekindly-posts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "livekindly-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "livekindly-settings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "livekindly-taxonomy-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "livekindly-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

@@ -3,10 +3,7 @@ info:
   title: LIVEKINDLY Content API (WordPress REST wp/v2) Taxonomy API
   version: wp/v2
   summary: 'Public read surface of thelivekindlyco.com content: newsroom posts, corporate pages, the brand and partner directories, open roles, media and site search.'
-  description: 'LIVEKINDLY Collective publishes thelivekindlyco.com on WordPress, which exposes the WordPress REST API at https://thelivekindlyco.com/wp-json/. The wp/v2 namespace is anonymously readable and returns the company newsroom and LiveKindly Blog, corporate pages, the `brand` directory (Fry’s Family Food Co., Like Meat, Oumph!, The No Meat Company), the `partner` directory (PHW Group, RCL Foods, Ospelt, Coest), the `job` careers listings, the media library, taxonomies and a site-wide search endpoint as JSON.
-
-
-    This document was DERIVED mechanically by API Evangelist from the route-discovery document served at https://thelivekindlyco.com/wp-json/ on 2026-08-04 — every path, method and parameter below is taken verbatim from that descriptor. LIVEKINDLY does not publish an OpenAPI definition of its own, and this is not a product API: it is the content API the CMS exposes. Write operations exist on these routes but require authentication (WordPress Application Passwords over HTTP Basic).'
+  description: LIVEKINDLY Collective publishes thelivekindlyco.com on WordPress, which exposes the WordPress REST API at https://thelivekindlyco.com/wp-json/.
   contact:
     name: LIVEKINDLY Collective
     url: https://thelivekindlyco.com/
@@ -214,7 +211,7 @@ paths:
   /wp/v2/categories/{id}:
     get:
       operationId: getCategoriesById
-      summary: GET /wp/v2/categories/(?P<id>[\d]+)
+      summary: GET /wp/v2/categories/(?P[\d]+)
       tags:
       - Taxonomy
       parameters:
@@ -258,7 +255,7 @@ paths:
       x-anonymous-access: true
     post:
       operationId: createCategoriesById
-      summary: POST /wp/v2/categories/(?P<id>[\d]+)
+      summary: POST /wp/v2/categories/(?P[\d]+)
       tags:
       - Taxonomy
       parameters:
@@ -313,7 +310,7 @@ paths:
       x-anonymous-access: false
     delete:
       operationId: deleteCategoriesById
-      summary: DELETE /wp/v2/categories/(?P<id>[\d]+)
+      summary: DELETE /wp/v2/categories/(?P[\d]+)
       tags:
       - Taxonomy
       parameters:
@@ -545,7 +542,7 @@ paths:
   /wp/v2/feed_category/{id}:
     get:
       operationId: getFeedCategoryById
-      summary: GET /wp/v2/feed_category/(?P<id>[\d]+)
+      summary: GET /wp/v2/feed_category/(?P[\d]+)
       tags:
       - Taxonomy
       parameters:
@@ -589,7 +586,7 @@ paths:
       x-anonymous-access: true
     post:
       operationId: createFeedCategoryById
-      summary: POST /wp/v2/feed_category/(?P<id>[\d]+)
+      summary: POST /wp/v2/feed_category/(?P[\d]+)
       tags:
       - Taxonomy
       parameters:
@@ -641,7 +638,7 @@ paths:
       x-anonymous-access: false
     delete:
       operationId: deleteFeedCategoryById
-      summary: DELETE /wp/v2/feed_category/(?P<id>[\d]+)
+      summary: DELETE /wp/v2/feed_category/(?P[\d]+)
       tags:
       - Taxonomy
       parameters:
@@ -873,7 +870,7 @@ paths:
   /wp/v2/tags/{id}:
     get:
       operationId: getTagsById
-      summary: GET /wp/v2/tags/(?P<id>[\d]+)
+      summary: GET /wp/v2/tags/(?P[\d]+)
       tags:
       - Taxonomy
       parameters:
@@ -917,7 +914,7 @@ paths:
       x-anonymous-access: true
     post:
       operationId: createTagsById
-      summary: POST /wp/v2/tags/(?P<id>[\d]+)
+      summary: POST /wp/v2/tags/(?P[\d]+)
       tags:
       - Taxonomy
       parameters:
@@ -969,7 +966,7 @@ paths:
       x-anonymous-access: false
     delete:
       operationId: deleteTagsById
-      summary: DELETE /wp/v2/tags/(?P<id>[\d]+)
+      summary: DELETE /wp/v2/tags/(?P[\d]+)
       tags:
       - Taxonomy
       parameters:
